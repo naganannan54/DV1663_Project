@@ -1,0 +1,41 @@
+score,user,stage,submissionDate,motherboard,memoryFrequency
+5504.5,Seby9123,Memory Frequency,2023-03-26,Z790 Apex,5504.5
+5400.4,Luumi,Memory Frequency,2023-04-09,Z790 Apex,5400.4
+5352.5,Rauf,Memory Frequency,2023-04-09,Z790 Apex,5352.5
+5351.5,biso biso,Memory Frequency,2023-04-09,Z790 Dark,5351.5
+5304.4,ZeR0_Dan,Memory Frequency,2023-04-09,Z790 Apex,5304.4
+5294.5,Micka,Memory Frequency,2023-04-09,Z790 Apex,5294.4
+5289.3,CENS,Memory Frequency,2023-04-09,Z790 Dark,5289.3
+5180,sergmann,Memory Frequency,2023-04-09,Z790 Tachyon,5180
+5179.8,IvanCupa,Memory Frequency,2023-04-09,Z790 Apex,5179.8
+4993.9,snakeeyes,Memory Frequency,2023-04-09,Z790 Apex,4993.9
+1267,Rauf,Cinebench R15,2023-03-08,Z790 Apex,4278.96
+1267,snakeeyes,Cinebench R15,2023-03-11,Z790 Apex,4278.96
+1267,IvanCupa,Cinebench R15,2023-03-11,Z790 Apex,4279.97
+1267,ZeR0_Dan,Cinebench R15,2023-03-19,Z790 Apex,4279.97
+1267,Seby9123,Cinebench R15,2023-03-19,Z790 Apex,4268.76
+1267,Micka,Cinebench R15,2023-03-20,Z790 Apex,4202.06
+1267,Luumi,Cinebench R15,2023-03-20,Z790 Apex,4202.06
+1267,CENS,Cinebench R15,2023-03-26,Z790 Dark,4268.76
+1266,biso biso,Cinebench R15,2023-03-10,Z790 Dark,4687.58
+1266,sergmann,Cinebench R15,2023-03-14,Z790 Tachyon,4212.03
+95.425,CENS,Y-Cruncher 2.5B,2023-04-06,Z790 Dark,4076.16
+95.433,biso biso,Y-Cruncher 2.5B,2023-04-06,Z790 Dark,4076.16
+95.823,sergmann,Y-Cruncher 2.5B,2023-04-06,Z790 Tachyon,4178.06
+95.866,snakeeyes,Y-Cruncher 2.5B,2023-04-02,Z790 Apex,4098.72
+95.911,Seby9123,Y-Cruncher 2.5B,2023-04-06,Z790 Apex,4026.81
+95.961,IvanCupa,Y-Cruncher 2.5B,2023-04-06,Z690 Unify-X,4041.22
+96.040,Rauf,Y-Cruncher 2.5B,2023-04-05,Z790 Apex,4076.16
+96.049,Luumi,Y-Cruncher 2.5B,2023-04-06,Z790 Apex,4076.16
+96.414,Micka,Y-Cruncher 2.5B,2023-04-06,Z790 Apex,3962.12
+96.465,ZeR0_Dan,Y-Cruncher 2.5B,2023-04-06,Z790 Apex,3962.12
+269.420,CENS,SuperPi 32M,2023-04-10,Z790 Dark,4584.60
+269.948,biso biso,SuperPi 32M,2023-04-10,Z790 Dark,4278.96
+270.102,Micka,SuperPi 32M,2023-04-10,Z790 Apex,4210.01
+270.118,Luumi,SuperPi 32M,2023-04-10,Z790 Dark,4346.88
+270.137,sergmann,SuperPi 32M,2023-04-10,Z790 Tachyon,4211.04
+270.234,Rauf,SuperPi 32M,2023-04-10,Z790 Apex,4178.06
+270.256,ZeR0_Dan,SuperPi 32M,2023-04-10,Z790 Apex,4210.01
+270.261,snakeeyes,SuperPi 32M,2023-04-10,Z790 Apex,4152.36
+270.414,Seby9123,SuperPi 32M,2023-04-10,Z790 Apex,4120.01
+270.697,IvanCupa,SuperPi 32M,2023-04-10,Z790 Apex,4200.00
