@@ -23,11 +23,11 @@ DROP TABLE IF EXISTS `motherboards`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `motherboards` (
-  `shortName` varchar(50) NOT NULL,
+  `motherboardname` varchar(50) NOT NULL,
   `manufacturer` varchar(50) DEFAULT NULL,
   `chipset` varchar(50) DEFAULT NULL,
   `model` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`shortName`)
+  PRIMARY KEY (`motherboardname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -76,18 +76,18 @@ DROP TABLE IF EXISTS `submissions`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `submissions` (
   `score` float NOT NULL,
-  `user` varchar(50) NOT NULL,
-  `stage` varchar(50) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `stagename` varchar(50) NOT NULL,
   `submissionDate` date NOT NULL,
-  `motherboard` varchar(50) DEFAULT NULL,
+  `motherboardname` varchar(50) DEFAULT NULL,
   `memoryFrequency` float DEFAULT NULL,
   `points` int DEFAULT NULL,
-  PRIMARY KEY (`user`,`stage`),
-  KEY `stage` (`stage`),
-  KEY `motherboard` (`motherboard`),
-  CONSTRAINT `submissions_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`username`),
-  CONSTRAINT `submissions_ibfk_2` FOREIGN KEY (`stage`) REFERENCES `stages` (`stagename`),
-  CONSTRAINT `submissions_ibfk_3` FOREIGN KEY (`motherboard`) REFERENCES `motherboards` (`shortName`)
+  PRIMARY KEY (`username`,`stagename`),
+  KEY `stagename` (`stagename`),
+  KEY `motherboardname` (`motherboardname`),
+  CONSTRAINT `submissions_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`),
+  CONSTRAINT `submissions_ibfk_2` FOREIGN KEY (`stagename`) REFERENCES `stages` (`stagename`),
+  CONSTRAINT `submissions_ibfk_3` FOREIGN KEY (`motherboardname`) REFERENCES `motherboards` (`motherboardname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -140,13 +140,13 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `NeedPointChange`(stageName VARCHAR(20), currentPoints INT, newScore FLOAT, ascending BOOL) RETURNS tinyint(1)
+CREATE DEFINER=`root`@`localhost` FUNCTION `NeedPointChange`(stageNameInput VARCHAR(20), currentPoints INT, newScore FLOAT, ascending BOOL) RETURNS tinyint(1)
     DETERMINISTIC
 BEGIN
 	DECLARE result BOOL;
     SET result = CASE WHEN 
 		(SELECT COUNT(points) FROM submissions 
-            WHERE stage = stageName 
+            WHERE stagename = stageNameInput 
 			AND ((points = currentPoints + 1 AND ((ascending AND score < newScore) OR (NOT ascending AND score > newScore))) 
             OR (points = currentPoints - 1 AND ((ascending AND score > newScore) OR (NOT ascending AND score < newScore))))
 		> 0) 
@@ -175,17 +175,17 @@ BEGIN
     IF ascending THEN
     UPDATE submissions AS 
 		s1 JOIN 
-			(SELECT stage, user, ROW_NUMBER() OVER (ORDER BY score ASC, submissionDate DESC) as newPoints 
-            FROM submissions WHERE stage = stageNameInput) AS s2 
-        ON s1.stage = s2.stage AND s1.user = s2.user 
+			(SELECT stagename, username, ROW_NUMBER() OVER (ORDER BY score ASC, submissionDate DESC) as newPoints 
+            FROM submissions WHERE stagename = stageNameInput) AS s2 
+        ON s1.stagename = s2.stagename AND s1.username = s2.username 
 	SET s1.points = s2.newPoints;
     
     ELSE
     UPDATE submissions AS 
 		s1 JOIN 
-			(SELECT stage, user, ROW_NUMBER() OVER (ORDER BY score DESC, submissionDate DESC) as newPoints 
-            FROM submissions WHERE stage = stageNameInput) AS s2 
-        ON s1.stage = s2.stage AND s1.user = s2.user 
+			(SELECT stagename, username, ROW_NUMBER() OVER (ORDER BY score DESC, submissionDate DESC) as newPoints 
+            FROM submissions WHERE stagename = stageNameInput) AS s2 
+        ON s1.stagename = s2.stagename AND s1.username = s2.username 
 	SET s1.points = s2.newPoints;
     END IF;
 END ;;
@@ -204,14 +204,14 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateScore`(IN newScore FLOAT, IN userName VARCHAR(50), IN stageNameInput VARCHAR(50))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateScore`(IN newScore FLOAT, IN userNameInput VARCHAR(50), IN stageNameInput VARCHAR(50))
 BEGIN
 	DECLARE currentPoints INT;
     DECLARE ascending BOOL;
-	SET currentPoints = (SELECT points FROM submissions WHERE user = userName AND stage = stageNameInput);
-    SET ascending = (SELECT descending FROM stages WHERE stageName = stageNameInput);
+	SET currentPoints = (SELECT points FROM submissions WHERE username = userNameInput AND stagename = stageNameInput);
+    SET ascending = (SELECT descending FROM stages WHERE stagename = stageNameInput);
 
-	UPDATE submissions SET score = newScore WHERE user = userName AND stage = stageNameInput;
+	UPDATE submissions SET score = newScore WHERE username = userNameInput AND stagename = stageNameInput;
 
 	IF project.NeedPointChange(stageNameInput, currentPoints, newScore, ascending) THEN
         CALL UpdatePoints(stageNameInput, ascending);
@@ -235,4 +235,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-28 17:58:06
+-- Dump completed on 2023-06-19 23:26:27

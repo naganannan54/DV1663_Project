@@ -56,7 +56,7 @@ def printAttributes(session, table):
 
 # Call query to show overall results summed from all stages
 def showLeaderboard(session):
-    query = "SELECT S.user, U.country, SUM(S.points) as points FROM submissions S, users U WHERE s.user = u.userName GROUP BY user ORDER BY points DESC;"
+    query = "SELECT S.username, U.country, SUM(S.points) as points FROM submissions S, users U WHERE S.username = U.username GROUP BY username ORDER BY points DESC;"
     result = session.sql(query).execute()
     attributes = ["User", "Country", "Points"]
     printResults(attributes, result.fetch_all())
@@ -66,12 +66,12 @@ def showLeaderboard(session):
 def showStageLeaderboard(session):
     print("\nSelect stage by entering its number")
     
-    stageOptions = session.sql("SELECT stageName FROM stages ORDER BY startDate").execute()
+    stageOptions = session.sql("SELECT stagename FROM stages ORDER BY startDate").execute()
     for i, s in enumerate(stageOptions.fetch_all()):
         print("  " + str(i + 1) + "\t" + s[0])
     stage = input("Stage number: ")
 
-    query = "SELECT user, score, points FROM submissions WHERE stage = '" + stageOptions[int(stage) - 1][0] + "' ORDER BY points DESC;"
+    query = "SELECT username, score, points FROM submissions WHERE stagename = '" + stageOptions[int(stage) - 1][0] + "' ORDER BY points DESC;"
     attributes = ["User", "Score", "Points"]
 
     try:
@@ -171,8 +171,8 @@ def showCustomLeaderboard(session):
     # Construct query from previous input
     query = "SELECT " + ",".join(attributes) \
             + " FROM submissions \
-                JOIN users ON submissions.user=users.username \
-                JOIN stages ON submissions.stage=stages.stagename " \
+                JOIN users ON submissions.username=users.username \
+                JOIN stages ON submissions.stagename=stages.stagename " \
             + filterQuery + orderQuery + ";"
 
     # Exclude table from visible header
@@ -203,23 +203,23 @@ def showStats(session):
     attributes = []
     largeCells = False
     if (userInput == "1"):
-        query = "SELECT country, AVG(points) as avgPoints FROM submissions JOIN users ON submissions.user = users.username GROUP BY country ORDER BY avgPoints DESC;"
+        query = "SELECT country, AVG(points) as avgPoints FROM submissions JOIN users ON submissions.username = users.username GROUP BY country ORDER BY avgPoints DESC;"
         attributes = ["Country", "Avg. points"]
 
     elif (userInput == "2"):
-        query = "SELECT CONCAT(m.manufacturer, ' ', m.chipset, ' ', m.model) as motherboardName, COUNT(motherboard) as numSubmissions \
-                FROM submissions s JOIN motherboards m on s.motherboard=m.shortName \
-                GROUP BY motherboard \
+        query = "SELECT CONCAT(m.manufacturer, ' ', m.chipset, ' ', m.model) as fullMotherboardName, COUNT(s.motherboardname) as numSubmissions \
+                FROM submissions s JOIN motherboards m on s.motherboardname=m.motherboardname \
+                GROUP BY s.motherboardname \
                 ORDER BY numSubmissions DESC;"
         attributes = ["Motherboard", "Times used"]
         largeCells = True
 
     elif (userInput == "3"):
-        query = "SELECT stage, AVG(memoryFrequency) as avgMem FROM submissions GROUP BY stage ORDER BY avgMem DESC;"
+        query = "SELECT stagename, AVG(memoryFrequency) as avgMem FROM submissions GROUP BY stagename ORDER BY avgMem DESC;"
         attributes = ["Stage", "Avg. frequency"]
 
     elif (userInput == "4"):
-        query = "SELECT (SELECT COUNT(score) FROM submissions su join stages st ON su.stage = st.stageName WHERE su.submissionDate = st.enddate) \
+        query = "SELECT (SELECT COUNT(score) FROM submissions su join stages st ON su.stagename = st.stagename WHERE su.submissionDate = st.enddate) \
                 / (SELECT COUNT(score) FROM submissions) * 100 as PercentageOfLastDaySubs;"
         attributes = ["Percentage"]
 
